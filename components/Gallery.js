@@ -11,7 +11,8 @@ export default class Main extends Component {
         this.state = {
             galleryPermission: null,
             data: [],
-            col: 4
+            col: 4,
+            del: []
         };
     }
 
@@ -32,6 +33,7 @@ export default class Main extends Component {
                 mediaType: 'photo',
                 album: exis,
                 sortBy: ['creationTime'],
+                first: 100
             })
             this.setState({
                 data: obj.assets
@@ -45,7 +47,7 @@ export default class Main extends Component {
 
     chLayout = () => {
         let i = this.state.col
-        if (i < 5) {
+        if (i < 4) {
             i++
         } else {
             i = 1
@@ -53,6 +55,28 @@ export default class Main extends Component {
         this.setState({
             col: i
         });
+    }
+
+    delPhoto = async () => {
+        await MediaLibrary.deleteAssetsAsync(this.state.del);
+        this.setState({
+            del: []
+        })
+        this.refr()
+
+    }
+
+    addPhotoToDel = async (x) => {
+        let temp = [...this.state.del]
+        if (temp.includes(x)) {
+            temp.splice(temp.indexOf(x), 1)
+        } else {
+            temp.push(x)
+        }
+        this.setState({
+            del: temp
+        })
+        console.log(temp)
     }
 
     render() {
@@ -63,10 +87,10 @@ export default class Main extends Component {
                     <View style={styles.top}>
                         <MyButton fun={this.chLayout} text="Layout" color="#2196F3" tcolor="white" x="10" y="4" />
                         <MyButton fun={this.goToCamera} text="Camera" color="#2196F3" tcolor="white" x="10" y="4" />
-                        <MyButton text="Delete" color="#2196F3" tcolor="white" x="10" y="4" />
+                        <MyButton fun={this.delPhoto} text="Delete" color="#2196F3" tcolor="white" x="10" y="4" />
                     </View>
                     <View style={styles.bot}>
-                        <List data={this.state.data} col={this.state.col} />
+                        <List data={this.state.data} col={this.state.col} fun={this.addPhotoToDel} del={this.state.del} />
                     </View>
                 </View>
             )

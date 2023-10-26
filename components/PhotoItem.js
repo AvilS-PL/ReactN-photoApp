@@ -1,11 +1,23 @@
 import React, { Component } from 'react';
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image, TouchableOpacity } from 'react-native';
 
 export default class PhotoItem extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            op: this.props.del
+                ? 1
+                : 0
         };
+    }
+
+    clicked = () => {
+        this.setState({
+            op: this.state.op == 0
+                ? 1
+                : 0
+        })
+        this.props.fun(this.props.id)
     }
 
     render() {
@@ -14,7 +26,7 @@ export default class PhotoItem extends Component {
             hei = 200
         }
         return (
-            <View style={{
+            <TouchableOpacity onPress={() => this.clicked()} style={{
                 width: (this.props.x / this.props.col) - 20,
                 height: hei,
                 borderRadius: 12,
@@ -25,6 +37,7 @@ export default class PhotoItem extends Component {
 
                 marginHorizontal: 10,
                 marginTop: 10
+
             }}>
                 <Image
                     style={{
@@ -33,8 +46,26 @@ export default class PhotoItem extends Component {
                     }}
                     source={{ uri: this.props.uri }}
                 />
-                <Text style={{ position: "absolute", right: 5, bottom: 5, color: "white" }}>12123</Text>
-            </View>
+                <View style={{
+                    opacity: this.state.op,
+                    position: "absolute",
+                    backgroundColor: "#00000077",
+                    width: "100%",
+                    height: "100%",
+
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                }}>
+                    <Image
+                        style={{
+                            width: 100 - (this.props.col * 15),
+                            height: 100 - (this.props.col * 15),
+                        }}
+                        source={require("../plus.png")}
+                    />
+                </View>
+                <Text style={{ position: "absolute", right: 5, bottom: 5, color: "white" }}>{this.props.id}</Text>
+            </TouchableOpacity>
         );
     }
 }

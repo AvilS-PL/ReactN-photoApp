@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, ToastAndroid } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, ToastAndroid, BackHandler } from 'react-native';
 import { Camera } from "expo-camera";
 import * as MediaLibrary from 'expo-media-library';
 
@@ -15,10 +15,21 @@ export default class Cam extends Component {
     }
 
     componentDidMount = async () => {
+        BackHandler.addEventListener("hardwareBackPress", this.handleBackPress);
         let { status } = await Camera.requestCameraPermissionsAsync();
         this.setState({
             cameraPermission: status == 'granted'
         });
+    }
+
+    componentWillUnmount = async () => {
+        BackHandler.removeEventListener("hardwareBackPress", this.handleBackPress);
+    }
+
+    handleBackPress = () => {
+        this.props.route.params.refresh()
+        this.props.navigation.goBack()
+        return true;
     }
 
     chType = () => {
@@ -43,11 +54,22 @@ export default class Cam extends Component {
 
             if (exis !== null) {
                 await MediaLibrary.addAssetsToAlbumAsync([asset], exis, false)
-                console.log("dodano")
+                ToastAndroid.showWithGravityAndOffset(
+                    'photo taken',
+                    ToastAndroid.SHORT,
+                    ToastAndroid.BOTTOM, 0, 400
+                );
+
                 this.props.route.params.refresh()
             } else {
                 await MediaLibrary.createAlbumAsync('photoApp', asset, false);
-                console.log("stworzono")
+                ToastAndroid.showWithGravityAndOffset(
+                    'photo taken',
+                    ToastAndroid.SHORT,
+                    ToastAndroid.BOTTOM, 0, 400
+                );
+
+
                 this.props.route.params.refresh()
             }
 

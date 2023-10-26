@@ -19,7 +19,11 @@ export default class Gallery extends Component {
                     numColumns={this.props.col}
                     key={this.props.col}
                     data={this.props.data}
-                    renderItem={({ item }) => <PhotoItem uri={item.uri} x={Dimensions.get("window").width} col={this.props.col} />}
+                    renderItem={({ item }) => <PhotoItem id={item.id} uri={item.uri} x={Dimensions.get("window").width} col={this.props.col} fun={this.props.fun} del={
+                        this.props.del.includes(item.id)
+                            ? true
+                            : false
+                    } />}
                     keyExtractor={item => item.id}
                 />
             </View>
