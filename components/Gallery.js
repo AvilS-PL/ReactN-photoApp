@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Alert, Switch, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, ToastAndroid } from 'react-native';
 import * as MediaLibrary from 'expo-media-library';
 
 import MyButton from './MyButton';
@@ -38,6 +38,10 @@ export default class Main extends Component {
             this.setState({
                 data: obj.assets
             })
+        } else {
+            this.setState({
+                data: []
+            })
         }
     }
 
@@ -58,12 +62,21 @@ export default class Main extends Component {
     }
 
     delPhoto = async () => {
-        await MediaLibrary.deleteAssetsAsync(this.state.del);
-        this.setState({
-            del: []
-        })
-        this.refr()
+        if (this.state.del.length == 0) {
+            alert("select at least one photo")
 
+        } else {
+            await MediaLibrary.deleteAssetsAsync(this.state.del);
+            this.setState({
+                del: []
+            })
+            this.refr()
+            ToastAndroid.showWithGravityAndOffset(
+                'selected photos deleted',
+                ToastAndroid.SHORT,
+                ToastAndroid.BOTTOM, 0, 50
+            );
+        }
     }
 
     addPhotoToDel = async (x) => {
@@ -76,7 +89,10 @@ export default class Main extends Component {
         this.setState({
             del: temp
         })
-        console.log(temp)
+    }
+
+    goToPhoto = (x) => {
+        this.props.navigation.navigate("photo", { id: x.id, uri: x.uri, refresh: this.refr })
     }
 
     render() {
@@ -90,7 +106,7 @@ export default class Main extends Component {
                         <MyButton fun={this.delPhoto} text="Delete" color="#2196F3" tcolor="white" x="10" y="4" />
                     </View>
                     <View style={styles.bot}>
-                        <List data={this.state.data} col={this.state.col} fun={this.addPhotoToDel} del={this.state.del} />
+                        <List data={this.state.data} col={this.state.col} fun={this.addPhotoToDel} del={this.state.del} goto={this.goToPhoto} />
                     </View>
                 </View>
             )

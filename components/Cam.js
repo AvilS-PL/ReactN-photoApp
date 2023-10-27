@@ -57,7 +57,7 @@ export default class Cam extends Component {
                 ToastAndroid.showWithGravityAndOffset(
                     'photo taken',
                     ToastAndroid.SHORT,
-                    ToastAndroid.BOTTOM, 0, 400
+                    ToastAndroid.BOTTOM, 0, 300
                 );
 
                 this.props.route.params.refresh()
@@ -66,7 +66,7 @@ export default class Cam extends Component {
                 ToastAndroid.showWithGravityAndOffset(
                     'photo taken',
                     ToastAndroid.SHORT,
-                    ToastAndroid.BOTTOM, 0, 400
+                    ToastAndroid.BOTTOM, 0, 300
                 );
 
 

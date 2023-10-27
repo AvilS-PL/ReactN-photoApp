@@ -6,6 +6,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Loading from './components/Loading';
 import Gallery from './components/Gallery';
 import Cam from './components/Cam';
+import Photo from './components/Photo';
 
 const Stack = createNativeStackNavigator();
 
@@ -39,6 +40,15 @@ export default class App extends React.Component {
             }}
             name="camera"
             component={Cam} />
+          <Stack.Screen
+            options={{
+              title: 'Selected Photo',
+              headerStyle: { backgroundColor: '#2196F3' },
+              headerTintColor: '#ffffff',
+              headerTitleStyle: { fontWeight: "bold" }
+            }}
+            name="photo"
+            component={Photo} />
         </Stack.Navigator>
       </NavigationContainer>
     )
