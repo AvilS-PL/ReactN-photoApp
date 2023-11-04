@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, ToastAndroid, BackHandler } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, ToastAndroid, BackHandler, Animated, Dimensions, ScrollView } from 'react-native';
 import { Camera } from "expo-camera";
 import * as MediaLibrary from 'expo-media-library';
 
 import CamButton from './CamButton';
+import RadioGroup from './RadioGroup';
 
 export default class Cam extends Component {
     constructor(props) {
@@ -11,7 +12,15 @@ export default class Cam extends Component {
         this.state = {
             cameraPermission: null,
             type: Camera.Constants.Type.back,
+            pos: new Animated.Value(0),
+            ratios: ["4:3", "16:9"],
+            whiteBalance: [],
+            flashMode: [],
+            pictureSizes: [],
+            selected: { ratio: "4:3" }
         };
+        //-Dimensions.get("window").width / 2
+        this.isHidden = true
     }
 
     componentDidMount = async () => {
@@ -76,25 +85,119 @@ export default class Cam extends Component {
         }
     }
 
+    openSettings = () => {
+        if (this.isHidden) toPos = 0; else toPos = -Dimensions.get("window").width / 2
+        Animated.spring(
+            this.state.pos,
+            {
+                toValue: toPos,
+                velocity: 1,
+                tension: 0,
+                friction: 10,
+                useNativeDriver: true
+            }
+        ).start();
+
+        this.isHidden = !this.isHidden;
+    }
+
+    setCameraSettings = async () => {
+        // let test = Object.getOwnPropertyNames(Camera.Constants.WhiteBalance).map((x, i) => {
+        //     return {text: x, number: g}
+        // })
+        // console.log(test)                                                                        TUTAJ!!!!
+        let wb = Object.getOwnPropertyNames(Camera.Constants.WhiteBalance)
+        let fm = Object.getOwnPropertyNames(Camera.Constants.FlashMode)
+        let ps = await this.getSizes()
+
+        this.setState({
+            whiteBalance: wb,
+            flashMode: fm,
+            pictureSizes: ps,
+            selected: {
+                ratio: "4:3",
+                wb: wb[0],
+                fm: fm[0],
+                ps: ps[0]
+            }
+        })
+    }
+
+    getSizes = async () => {
+        if (this.camera) {
+            const sizes = await this.camera.getAvailablePictureSizesAsync(this.state.selected.ratio)
+            return (sizes)
+        }
+    };
+
+    change = (what) => {
+
+    }
+
     render() {
         if (this.state.cameraPermission == true) {
             return (
                 <View style={styles.main}>
                     <Camera
+                        onCameraReady={() => this.setCameraSettings()}
                         ref={ref => {
                             this.camera = ref; // ref na później
                         }}
                         style={{ flex: 1 }}
-                        type={this.state.type}>
+                        type={this.state.type}
+                        ratio={this.state.selected.ratio}
+                        whiteBalance={this.state.selected.wb}
+                        pictureSize={this.state.selected.ps}
+                        flashMode={this.state.selected.fm}
+                    >
                         <View style={{ flex: 1 }}>
                             <View style={styles.inTop}>
                             </View>
                             <View style={styles.inBottom}>
                                 <CamButton fun={this.chType} url={require('../rev.png')} color="#BBDEFB77" s="6" />
                                 <CamButton fun={this.takePhoto} url={require('../plus.png')} color="#BBDEFB77" s="8" />
+                                <CamButton fun={this.openSettings} url={require('../settings.png')} color="#BBDEFB77" s="6" />
                             </View>
                         </View>
                     </Camera>
+
+                    <Animated.View
+                        style={[
+                            styles.animatedView,
+                            {
+                                transform: [
+                                    { translateX: this.state.pos }
+                                ]
+                            }]} >
+                        <Text style={{ color: "white", fontSize: 20, fontWeight: "bold" }}>SETTINGS</Text>
+                        <ScrollView style={{ width: "80%" }}>
+                            <RadioGroup
+                                color="yellow"
+                                change={this.change}
+                                direction="column"
+                                data={this.state.whiteBalance}
+                                groupName="White Balance" />
+                            <RadioGroup
+                                color="yellow"
+                                change={this.change}
+                                direction="column"
+                                data={this.state.flashMode}
+                                groupName="Flash Mode" />
+                            <RadioGroup
+                                color="yellow"
+                                change={this.change}
+                                direction="column"
+                                data={this.state.ratios}
+                                groupName="Camera Ratio" />
+                            <RadioGroup
+                                color="yellow"
+                                change={this.change}
+                                direction="column"
+                                data={this.state.pictureSizes}
+                                groupName="Picture Sizes" />
+                        </ScrollView>
+
+                    </Animated.View>
                 </View>
             )
         } else if (this.state.cameraPermission == false) {
@@ -136,5 +239,15 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-evenly",
         alignItems: "center",
+    },
+    animatedView: {
+        position: "absolute",
+        bottom: 0,
+        top: 0,
+        left: 0,
+        backgroundColor: "#00000055",
+        width: Dimensions.get("window").width / 2,
+
+        alignItems: 'center',
     },
 });

@@ -13,14 +13,14 @@ export default class Photo extends Component {
     }
 
     del = async () => {
-        await MediaLibrary.deleteAssetsAsync([this.props.route.params.id])
+        await MediaLibrary.deleteAssetsAsync([this.props.route.params.data.id])
         this.props.route.params.refresh()
         this.props.navigation.goBack()
     }
 
     share = async () => {
         if (Sharing.isAvailableAsync()) {
-            Sharing.shareAsync(this.props.route.params.uri)
+            Sharing.shareAsync(this.props.route.params.data.uri)
         } else {
             alert("it is imposible to share right now")
         }
@@ -29,7 +29,7 @@ export default class Photo extends Component {
     render() {
         return (
             <View style={{ flex: 1, margin: 20 }}>
-                <View style={{ flex: 2 }}>
+                <View style={{ flex: 6 }}>
                     <Image
                         style={{
                             borderRadius: 12,
@@ -37,10 +37,13 @@ export default class Photo extends Component {
                             height: "100%",
                             resizeMode: "contain"
                         }}
-                        source={{ uri: this.props.route.params.uri }}
+                        source={{ uri: this.props.route.params.data.uri }}
                     />
                 </View>
-                <View style={{ flex: 1, flexDirection: "row", alignItems: 'center', justifyContent: 'space-evenly', }}>
+                <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', }}>
+                    <Text style={{ fontSize: 20 }}>{this.props.route.params.data.width} x {this.props.route.params.data.height}</Text>
+                </View>
+                <View style={{ flex: 3, flexDirection: "row", alignItems: 'center', justifyContent: 'space-evenly', }}>
                     <MyButton fun={this.del} text="Delete" color="#2196F3" tcolor="white" x="10" y="4" />
                     <MyButton fun={this.share} text="Share" color="#2196F3" tcolor="white" x="10" y="4" />
                 </View>

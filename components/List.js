@@ -20,8 +20,7 @@ export default class Gallery extends Component {
                     key={this.props.col}
                     data={this.props.data}
                     renderItem={({ item }) => <PhotoItem
-                        id={item.id}
-                        uri={item.uri}
+                        data={item}
                         x={Dimensions.get("window").width}
                         col={this.props.col}
                         goto={this.props.goto}

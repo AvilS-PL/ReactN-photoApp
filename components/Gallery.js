@@ -92,7 +92,8 @@ export default class Main extends Component {
     }
 
     goToPhoto = (x) => {
-        this.props.navigation.navigate("photo", { id: x.id, uri: x.uri, refresh: this.refr })
+        console.log(x.data.uri)
+        this.props.navigation.navigate("photo", { data: x.data, refresh: this.refr })
     }
 
     render() {

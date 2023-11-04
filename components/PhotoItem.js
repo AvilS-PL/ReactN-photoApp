@@ -12,7 +12,7 @@ export default class PhotoItem extends Component {
     }
 
     clicked = () => {
-        this.props.goto({ id: this.props.id, uri: this.props.uri })
+        this.props.goto({ data: this.props.data })
     }
 
     pressed = () => {
@@ -21,7 +21,7 @@ export default class PhotoItem extends Component {
                 ? 1
                 : 0
         })
-        this.props.fun(this.props.id)
+        this.props.fun(this.props.data.id)
     }
 
     render() {
@@ -49,7 +49,7 @@ export default class PhotoItem extends Component {
                             width: (this.props.x / this.props.col) - 20,
                             height: (this.props.x / this.props.col) - 20,
                         }}
-                        source={{ uri: this.props.uri }}
+                        source={{ uri: this.props.data.uri }}
                     />
                     <View style={{
                         opacity: this.state.op,
@@ -69,7 +69,7 @@ export default class PhotoItem extends Component {
                             source={require("../plus.png")}
                         />
                     </View>
-                    <Text style={{ position: "absolute", right: 5, bottom: 5, color: "white" }}>{this.props.id}</Text>
+                    <Text style={{ position: "absolute", right: 5, bottom: 5, color: "white" }}>{this.props.data.id}</Text>
                 </View>
             </TouchableOpacity>
         );
