@@ -10,7 +10,7 @@ export default class RadioButton extends Component {
 
     render() {
         return (
-            <TouchableOpacity onPress={() => this.props.fun(this.props.text)} style={[{ flexDirection: "row", marginTop: 10, alignItems: 'center', }]}>
+            <TouchableOpacity onPress={() => this.props.fun({ what: this.props.groupName, text: this.props.text })} style={[{ flexDirection: "row", marginBottom: 10, alignItems: 'center', }]}>
                 <View style={[styles.center, styles.btOuter]}>
                     <View style={[styles.btInner, { opacity: this.props.op }]}></View>
                 </View>

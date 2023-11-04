@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image, Dimensions } from 'react-native';
 import * as MediaLibrary from "expo-media-library";
 import * as Sharing from 'expo-sharing';
 
@@ -32,10 +32,9 @@ export default class Photo extends Component {
                 <View style={{ flex: 6 }}>
                     <Image
                         style={{
-                            borderRadius: 12,
-                            width: "100%",
                             height: "100%",
-                            resizeMode: "contain"
+                            // width: "100%",
+                            resizeMode: "contain",
                         }}
                         source={{ uri: this.props.route.params.data.uri }}
                     />

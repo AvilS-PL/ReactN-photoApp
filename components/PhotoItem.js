@@ -47,7 +47,7 @@ export default class PhotoItem extends Component {
                     <Image
                         style={{
                             width: (this.props.x / this.props.col) - 20,
-                            height: (this.props.x / this.props.col) - 20,
+                            height: ((this.props.x / this.props.col) - 20) > 200 ? 200 : (this.props.x / this.props.col) - 20,
                         }}
                         source={{ uri: this.props.data.uri }}
                     />

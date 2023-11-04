@@ -12,14 +12,13 @@ export default class Cam extends Component {
         this.state = {
             cameraPermission: null,
             type: Camera.Constants.Type.back,
-            pos: new Animated.Value(0),
+            pos: new Animated.Value(-Dimensions.get("window").width / 2),
             ratios: ["4:3", "16:9"],
             whiteBalance: [],
             flashMode: [],
             pictureSizes: [],
             selected: { ratio: "4:3" }
         };
-        //-Dimensions.get("window").width / 2
         this.isHidden = true
     }
 
@@ -105,11 +104,11 @@ export default class Cam extends Component {
         // let test = Object.getOwnPropertyNames(Camera.Constants.WhiteBalance).map((x, i) => {
         //     return {text: x, number: g}
         // })
-        // console.log(test)                                                                        TUTAJ!!!!
+        // console.log(test)
         let wb = Object.getOwnPropertyNames(Camera.Constants.WhiteBalance)
         let fm = Object.getOwnPropertyNames(Camera.Constants.FlashMode)
         let ps = await this.getSizes()
-
+        let tempPS = [...ps]
         this.setState({
             whiteBalance: wb,
             flashMode: fm,
@@ -118,7 +117,7 @@ export default class Cam extends Component {
                 ratio: "4:3",
                 wb: wb[0],
                 fm: fm[0],
-                ps: ps[0]
+                ps: tempPS.pop()
             }
         })
     }
@@ -130,8 +129,36 @@ export default class Cam extends Component {
         }
     };
 
-    change = (what) => {
-
+    change = ({ what, text }) => {
+        let temp = this.state.selected
+        switch (what) {
+            case "White Balance":
+                temp.wb = text
+                this.setState({
+                    selected: temp
+                })
+                break;
+            case "Flash Mode":
+                temp.fm = text
+                this.setState({
+                    selected: temp
+                })
+                break;
+            case "Camera Ratio":
+                temp.ratio = text
+                this.setState({
+                    selected: temp
+                })
+                break;
+            case "Picture Sizes":
+                temp.ps = text
+                this.setState({
+                    selected: temp
+                })
+                break;
+            default:
+                break;
+        }
     }
 
     render() {
@@ -141,7 +168,7 @@ export default class Cam extends Component {
                     <Camera
                         onCameraReady={() => this.setCameraSettings()}
                         ref={ref => {
-                            this.camera = ref; // ref na później
+                            this.camera = ref
                         }}
                         style={{ flex: 1 }}
                         type={this.state.type}
@@ -173,27 +200,31 @@ export default class Cam extends Component {
                         <ScrollView style={{ width: "80%" }}>
                             <RadioGroup
                                 color="yellow"
-                                change={this.change}
+                                fun={this.change}
                                 direction="column"
                                 data={this.state.whiteBalance}
+                                selected={this.state.selected.wb}
                                 groupName="White Balance" />
                             <RadioGroup
                                 color="yellow"
-                                change={this.change}
+                                fun={this.change}
                                 direction="column"
                                 data={this.state.flashMode}
+                                selected={this.state.selected.fm}
                                 groupName="Flash Mode" />
                             <RadioGroup
                                 color="yellow"
-                                change={this.change}
+                                fun={this.change}
                                 direction="column"
                                 data={this.state.ratios}
+                                selected={this.state.selected.ratio}
                                 groupName="Camera Ratio" />
                             <RadioGroup
                                 color="yellow"
-                                change={this.change}
+                                fun={this.change}
                                 direction="column"
                                 data={this.state.pictureSizes}
+                                selected={this.state.selected.ps}
                                 groupName="Picture Sizes" />
                         </ScrollView>
 
