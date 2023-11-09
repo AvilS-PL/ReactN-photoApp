@@ -7,6 +7,7 @@ import Loading from './components/Loading';
 import Gallery from './components/Gallery';
 import Cam from './components/Cam';
 import Photo from './components/Photo';
+import Address from './components/Address';
 
 const Stack = createNativeStackNavigator();
 
@@ -49,6 +50,15 @@ export default class App extends React.Component {
             }}
             name="photo"
             component={Photo} />
+          <Stack.Screen
+            options={{
+              title: 'Adres and port',
+              headerStyle: { backgroundColor: '#2196F3' },
+              headerTintColor: '#ffffff',
+              headerTitleStyle: { fontWeight: "bold" }
+            }}
+            name="adres"
+            component={Address} />
         </Stack.Navigator>
       </NavigationContainer>
     )

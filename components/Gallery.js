@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, ToastAndroid } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, ToastAndroid, ScrollView } from 'react-native';
 import * as MediaLibrary from 'expo-media-library';
+import * as SecureStore from 'expo-secure-store';
 
 import MyButton from './MyButton';
 import List from './List';
@@ -79,6 +80,38 @@ export default class Main extends Component {
         }
     }
 
+    uploadPhoto = async () => {
+        if (this.state.del.length == 0) {
+            alert("select at least one photo")
+
+        } else {
+            const data = new FormData()
+
+            for (let i = 0; i < this.state.del.length; i++) {
+
+                let el = this.state.data.find((x) => {
+                    if (x.id == this.state.del[i]) {
+                        return x
+                    }
+                })
+
+                data.append('photo', {
+                    uri: el.uri,
+                    type: 'image/jpeg',
+                    name: el.filename
+                });
+            }
+            let ip = await SecureStore.getItemAsync("ip")
+            let port = await SecureStore.getItemAsync("port")
+            let result = await fetch("http://" + ip + ":" + port + "/upload", { method: "POST", body: data })
+            ToastAndroid.showWithGravityAndOffset(
+                await result.json(),
+                ToastAndroid.SHORT,
+                ToastAndroid.BOTTOM, 0, 50
+            )
+        }
+    }
+
     addPhotoToDel = async (x) => {
         let temp = [...this.state.del]
         if (temp.includes(x)) {
@@ -96,16 +129,32 @@ export default class Main extends Component {
         this.props.navigation.navigate("photo", { data: x.data, refresh: this.refr })
     }
 
+    goToAdres = () => {
+        this.props.navigation.navigate("adres")
+    }
+
     render() {
         if (this.state.galleryPermission == true) {
 
             return (
                 <View style={{ flex: 1, backgroundColor: "white" }}>
-                    <View style={styles.top}>
-                        <MyButton fun={this.chLayout} text="Layout" color="#2196F3" tcolor="white" x="10" y="4" />
-                        <MyButton fun={this.goToCamera} text="Camera" color="#2196F3" tcolor="white" x="10" y="4" />
-                        <MyButton fun={this.delPhoto} text="Delete" color="#2196F3" tcolor="white" x="10" y="4" />
-                    </View>
+                    <ScrollView horizontal={true} style={styles.top}>
+                        <View style={styles.bt}>
+                            <MyButton fun={this.chLayout} text="Layout" color="#2196F3" tcolor="white" x="10" y="4" />
+                        </View>
+                        <View style={styles.bt}>
+                            <MyButton fun={this.goToCamera} text="Camera" color="#2196F3" tcolor="white" x="10" y="4" />
+                        </View>
+                        <View style={styles.bt}>
+                            <MyButton fun={this.delPhoto} text="Delete" color="#2196F3" tcolor="white" x="10" y="4" />
+                        </View>
+                        <View style={styles.bt}>
+                            <MyButton fun={this.uploadPhoto} text="Upload" color="#2196F3" tcolor="white" x="10" y="4" />
+                        </View>
+                        <View style={styles.bt}>
+                            <MyButton fun={this.goToAdres} text="Set IP:Port" color="#2196F3" tcolor="white" x="10" y="4" />
+                        </View>
+                    </ScrollView>
                     <View style={styles.bot}>
                         <List data={this.state.data} col={this.state.col} fun={this.addPhotoToDel} del={this.state.del} goto={this.goToPhoto} />
                     </View>
@@ -134,8 +183,12 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: "#BBDEFB",
         flexDirection: 'row',
+
+    },
+    bt: {
         alignItems: 'center',
-        justifyContent: 'space-evenly',
+        justifyContent: 'center',
+        marginHorizontal: 5
     },
     bot: {
         flex: 10,

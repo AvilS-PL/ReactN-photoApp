@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator, ToastAndroid, BackHandler, Animated, Dimensions, ScrollView } from 'react-native';
 import { Camera } from "expo-camera";
 import * as MediaLibrary from 'expo-media-library';
+import * as ImagePicker from 'expo-image-picker';
+import * as SecureStore from 'expo-secure-store';
 
 import CamButton from './CamButton';
 import RadioGroup from './RadioGroup';
@@ -161,6 +163,33 @@ export default class Cam extends Component {
         }
     }
 
+    openPicker = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
+
+        if (!result.canceled) {
+            console.log(result.assets[0].uri)
+            const data = new FormData()
+            data.append('photo', {
+                uri: result.assets[0].uri,
+                type: 'image/jpeg',
+                name: result.assets[0].uri.split("/").pop()
+            });
+            let ip = await SecureStore.getItemAsync("ip")
+            let port = await SecureStore.getItemAsync("port")
+            let result = await fetch("http://" + ip + ":" + port + "/upload", { method: "POST", body: data })
+            ToastAndroid.showWithGravityAndOffset(
+                await jasny.json(),
+                ToastAndroid.SHORT,
+                ToastAndroid.BOTTOM, 0, 50
+            )
+        }
+    }
+
     render() {
         if (this.state.cameraPermission == true) {
             return (
@@ -184,6 +213,7 @@ export default class Cam extends Component {
                                 <CamButton fun={this.chType} url={require('../rev.png')} color="#BBDEFB77" s="6" />
                                 <CamButton fun={this.takePhoto} url={require('../plus.png')} color="#BBDEFB77" s="8" />
                                 <CamButton fun={this.openSettings} url={require('../settings.png')} color="#BBDEFB77" s="6" />
+                                <CamButton fun={this.openPicker} url={require('../gallery.png')} color="#BBDEFB77" s="6" />
                             </View>
                         </View>
                     </Camera>

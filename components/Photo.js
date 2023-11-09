@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { View, Text, Image, Dimensions } from 'react-native';
+import { View, Text, Image, Dimensions, ToastAndroid } from 'react-native';
 import * as MediaLibrary from "expo-media-library";
 import * as Sharing from 'expo-sharing';
+import * as SecureStore from 'expo-secure-store';
 
 import MyButton from './MyButton';
 
@@ -26,6 +27,24 @@ export default class Photo extends Component {
         }
     }
 
+    upload = async () => {
+        const data = new FormData()
+        data.append('photo', {
+            uri: this.props.route.params.data.uri,
+            type: 'image/jpeg',
+            name: this.props.route.params.data.filename
+        });
+        let ip = await SecureStore.getItemAsync("ip")
+        let port = await SecureStore.getItemAsync("port")
+        let result = await fetch("http://" + ip + ":" + port + "/upload", { method: "POST", body: data })
+        ToastAndroid.showWithGravityAndOffset(
+            await result.json(),
+            ToastAndroid.SHORT,
+            ToastAndroid.BOTTOM, 0, 50
+        )
+
+    }
+
     render() {
         return (
             <View style={{ flex: 1, margin: 20 }}>
@@ -45,6 +64,7 @@ export default class Photo extends Component {
                 <View style={{ flex: 3, flexDirection: "row", alignItems: 'center', justifyContent: 'space-evenly', }}>
                     <MyButton fun={this.del} text="Delete" color="#2196F3" tcolor="white" x="10" y="4" />
                     <MyButton fun={this.share} text="Share" color="#2196F3" tcolor="white" x="10" y="4" />
+                    <MyButton fun={this.upload} text="Upload" color="#2196F3" tcolor="white" x="10" y="4" />
                 </View>
 
             </View>
