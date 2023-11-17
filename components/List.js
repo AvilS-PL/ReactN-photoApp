@@ -27,8 +27,8 @@ export default class Gallery extends Component {
                         fun={this.props.fun}
                         del={
                             this.props.del.includes(item.id)
-                                ? true
-                                : false
+                                ? 1
+                                : 0
                         }
                     />}
                     keyExtractor={item => item.id}

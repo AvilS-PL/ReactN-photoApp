@@ -37,11 +37,7 @@ export default class Photo extends Component {
         let ip = await SecureStore.getItemAsync("ip")
         let port = await SecureStore.getItemAsync("port")
         let result = await fetch("http://" + ip + ":" + port + "/upload", { method: "POST", body: data })
-        ToastAndroid.showWithGravityAndOffset(
-            await result.json(),
-            ToastAndroid.SHORT,
-            ToastAndroid.BOTTOM, 0, 50
-        )
+        alert(await result.json())
 
     }
 
@@ -59,7 +55,7 @@ export default class Photo extends Component {
                     />
                 </View>
                 <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', }}>
-                    <Text style={{ fontSize: 20 }}>{this.props.route.params.data.width} x {this.props.route.params.data.height}</Text>
+                    <Text style={{ fontSize: 20 }}>{this.props.route.params.data.height} x {this.props.route.params.data.width}</Text>
                 </View>
                 <View style={{ flex: 3, flexDirection: "row", alignItems: 'center', justifyContent: 'space-evenly', }}>
                     <MyButton fun={this.del} text="Delete" color="#2196F3" tcolor="white" x="10" y="4" />

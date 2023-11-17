@@ -66,7 +66,10 @@ export default class Address extends Component {
                 // } else {
                 //     console.log("hmm")
                 // }
-
+                this.setState({
+                    opIp: this.state.ip,
+                    opPort: this.state.port
+                })
             } else {
                 alert("wrong port")
             }

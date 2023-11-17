@@ -181,12 +181,8 @@ export default class Cam extends Component {
             });
             let ip = await SecureStore.getItemAsync("ip")
             let port = await SecureStore.getItemAsync("port")
-            let result = await fetch("http://" + ip + ":" + port + "/upload", { method: "POST", body: data })
-            ToastAndroid.showWithGravityAndOffset(
-                await jasny.json(),
-                ToastAndroid.SHORT,
-                ToastAndroid.BOTTOM, 0, 50
-            )
+            let odp = await fetch("http://" + ip + ":" + port + "/upload", { method: "POST", body: data })
+            alert(await odp.json())
         }
     }
 

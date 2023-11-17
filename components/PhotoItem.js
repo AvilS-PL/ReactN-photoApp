@@ -4,11 +4,6 @@ import { View, Text, Image, TouchableOpacity, TouchableHighlight } from 'react-n
 export default class PhotoItem extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            op: this.props.del
-                ? 1
-                : 0
-        };
     }
 
     clicked = () => {
@@ -16,11 +11,6 @@ export default class PhotoItem extends Component {
     }
 
     pressed = () => {
-        this.setState({
-            op: this.state.op == 0
-                ? 1
-                : 0
-        })
         this.props.fun(this.props.data.id)
     }
 
@@ -52,7 +42,7 @@ export default class PhotoItem extends Component {
                         source={{ uri: this.props.data.uri }}
                     />
                     <View style={{
-                        opacity: this.state.op,
+                        opacity: this.props.del,
                         position: "absolute",
                         backgroundColor: "#00000077",
                         width: "100%",
