@@ -10,7 +10,7 @@ function App() {
 
   const refresh = async () => {
     try {
-      let result = await fetch("http://192.168.119.107:3000/files", { method: "GET" })
+      let result = await fetch("http://localhost:3000/files", { method: "GET" })
       let tab = await result.json()
       let newTab = tab.map((x, i) => {
         return (
@@ -42,14 +42,22 @@ function App() {
   }
 
   const del = async () => {
-    try {
-      const data = new FormData()
-      data.append("tab", sel)
-      await fetch("http://192.168.119.107:3000/del", { method: "PATCH", body: data })
-      await refresh()
-    } catch (ex) {
-      console.log(ex)
+    console.log(sel)
+    if (sel.length != 0) {
+      try {
+        const data = new FormData()
+        data.append("tab", sel)
+        await fetch("http://localhost:3000/del", { method: "PATCH", body: data })
+        setSel([])
+        setAllTab([])
+        await refresh()
+      } catch (ex) {
+        console.log(ex)
+      }
+    } else {
+      alert("Select at least one photo")
     }
+
   }
 
   useEffect(() => {
@@ -58,14 +66,16 @@ function App() {
 
 
   return (
-    <div>
-      <button onClick={refresh}>Refresh</button>
-      <button onClick={selectAll}>
-        {(sel.length == allTab.length)
-          ? "DeSelect All"
-          : "Select all"
-        }</button>
-      <button onClick={del}>Delete Selected</button>
+    <div id='main'>
+      <header>
+        <button onClick={refresh}>Refresh</button>
+        <button onClick={selectAll}>
+          {((sel.length == allTab.length) && (allTab.length != 0))
+            ? "DeSelect All"
+            : "Select all"
+          }</button>
+        <button onClick={del}>Delete Selected</button>
+      </header>
       <div id="lista">
         {photos}
       </div>

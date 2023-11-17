@@ -25,7 +25,7 @@ export default class Element2 extends React.Component {
             data.append("name", x)
             data.append("newName", p)
 
-            await fetch("http://192.168.119.107:3000/rename", { method: "PATCH", body: data })
+            await fetch("http://localhost:3000/rename", { method: "PATCH", body: data })
             await this.props.refresh()
         } catch (ex) {
             console.log(ex)
@@ -45,7 +45,6 @@ export default class Element2 extends React.Component {
                 <p>{this.props.x}</p>
                 <img src={"http://192.168.119.107:3000/photos/" + this.props.x} />
                 <button onClick={() => this.openRename(this.props.x)}>Rename</button>
-                <button onClick={() => this.test()}>test</button>
                 <input type="checkbox" value={this.props.x} onClick={() => this.selectOne(this.props.x)} />
             </div>
         );

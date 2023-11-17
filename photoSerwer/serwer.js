@@ -54,11 +54,11 @@ app.patch('/del', async (req, res) => {
     try {
         let data = []
         await form.parse(req, function (err, fields, files) {
-            data = fields.tab
+            data = fields.tab.split(",")
         });
         for (let i = 0; i < data.length; i++) {
-            // await del(data[i])
-            console.log(data)
+            await del(data[i])
+            console.log(data[i])
         }
         res.end(JSON.stringify("gut"))
     } catch (error) {
