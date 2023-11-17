@@ -35,12 +35,12 @@ input {
 }
 
 header button:hover {
-    transition: 50ms;
+    transition: 200ms;
     box-shadow: 0px 5px 2px 0px #115d9b, inset 0px 0px 0px 0px #115d9b;
     transform: translateY(-2px);
 }
 
-header button:active {
+header button:active:hover {
     transition: 50ms;
     background-color: #1a90ea;
     box-shadow: 0px 0px 0px 0px #115d9b, inset 0px 3px 2px 0px #115d9b;
@@ -91,20 +91,20 @@ header button:active {
     border-radius: 8px;
 
     background-color: #8bc1ee;
-    box-shadow: 0px 3px 2px 0px #115d9b, inset 0px 0px 0px 0px #115d9b;
+    box-shadow: 0px 3px 1px 0px #115d9b, inset 0px 0px 0px 0px #115d9b;
     transition: 300ms;
 }
 
 .element button:hover {
     transition: 50ms;
-    box-shadow: 0px 4px 2px 0px #115d9b, inset 0px 0px 0px 0px #115d9b;
-    transform: translateY(-1px);
+    box-shadow: 0px 5px 1px 0px #115d9b, inset 0px 0px 0px 0px #115d9b;
+    transform: translateY(-2px);
 }
 
-.element button:active {
+.element button:active:hover {
     transition: 50ms;
-    background-color: #BBDEFB;
-    box-shadow: 0px 0px 0px 0px #115d9b, inset 0px 3px 2px 0px #115d9b;
+    background-color: #9ccdf5;
+    box-shadow: 0px 0px 0px 0px #115d9b, inset 0px 3px 1px 0px #115d9b;
     transform: translateY(3px);
 }
 
